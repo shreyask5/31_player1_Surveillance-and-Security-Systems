@@ -1,0 +1,167 @@
+/* Global Styles */
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    color: #ffffff !important;
+    text-align: center;
+    margin: 0;
+    background: #000000; /* Black background for the entire webpage */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+}
+
+/* Header */
+header {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    position: sticky;
+    top: 0;
+}
+
+header h1 {
+    margin: 0;
+    color: #00a043;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -1px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Video Container */
+#camera {
+    margin-top: 20px;
+    border: 3px solid #00a043; /* Green border for video feed */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 640px;
+    height: auto;
+}
+
+/* Canvas */
+#canvas {
+    display: none;
+}
+
+/* Status Box */
+#status {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(46, 204, 113, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    max-width: 640px;
+    width: 90%;
+}
+
+#status-text {
+    color: #2ecc71;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Controls */
+#controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #e60000;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+    background-color: rgba(255, 77, 77, 0.5);
+    cursor: not-allowed;
+}
+
+/* History */
+#history {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    border: 1px solid #00a043;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 640px;
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Emergency Alert */
+#emergency-alert {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #ff4d4d;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4);
+    max-width: 640px;
+    width: 90%;
+    display: none;
+    animation: pulse 1.5s infinite alternate;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    #history {
+        height: 100px;
+    }
+
+    #camera {
+        width: 100%;
+    }
+}
