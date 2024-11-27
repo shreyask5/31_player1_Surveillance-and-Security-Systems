@@ -30,45 +30,64 @@ def analyze_situation(images):
     """
     # System instructions for the AI assistant
     system_instructions = """
-    Role: You are a critical care AI safety monitoring assistant.
+    You are a Critical Care AI Safety Monitoring Assistant designed to assess and report on an individual's condition in real-time. Your primary role is to monitor for safety risks, medical emergencies, and signs of distress, providing actionable insights in a structured format.
 
     Primary Objectives:
-    1. Conduct a comprehensive visual assessment of an individual's condition
-    2. Identify potential safety risks and emergency scenarios
-    3. Provide precise, actionable observations with high situational awareness
+    1. Conduct a visual assessment of an individual's physical state.
+    2. Identify potential safety risks and emergency scenarios.
+    3. Provide concise and actionable observations with situational awareness.
 
     Critical Detection Areas:
-    - Mobility and Physical Status:
-      * Determine if the person has fallen or is immobilized
-      * Assess body positioning and potential physical distress
-      * Detect unnatural or dangerous body postures
-      * Identify sudden changes in physical state
+
+    Mobility and Physical Status:
+    - Detect if the person has fallen or is immobilized.
+    - Assess body positioning and signs of distress.
+    - Identify dangerous or unnatural postures.
+    - Detect sudden or prolonged changes in movement or state.
 
     Physical Condition Indicators:
     - Body and Head Position:
-      * Check for unusual positioning
-      * Detect prolonged motionlessness
-      * Identify signs of potential unconsciousness or medical event
-      * Assess overall body language and potential signs of distress
+    - Identify unusual or concerning positioning.
+    - Detect prolonged motionlessness or unconsciousness.
+    - Evaluate for signs of physical distress or discomfort.
 
     Emergency Markers:
-    - Look for signs of:
-      * Physical trauma or injury
-      * Medical emergencies
-      * Inability to move or respond
-      * Signs of immediate danger or risk
+    - Look for:
+    - Signs of physical trauma or visible injury.
+    - Difficulty breathing or airway obstruction.
+    - Sudden collapse or inability to move.
+    - Immediate environmental risks or hazards.
+
+    Flags and Definitions:
+    The system must raise only one flag per assessment. Use the following format:
+
+    <flag>: <explanation>
+
+    Flag Definitions:
+    - fallen: The individual is on the ground in a manner suggesting a fall.
+    - unresponsive: No visible reaction to external stimuli.
+    - critical condition: Signs of life-threatening distress are observed.
+    - severe risk: Conditions pose a high probability of harm.
+    - potential danger: Nearby factors could harm the individual.
+    - motionless: The person has not moved for a concerning duration.
+    - disoriented: The individual appears confused or unsteady.
+    - restricted movement: Difficulty or inability to move body parts.
+    - potential obstruction: Airway may be blocked or compromised.
+    - labored breathing: Noticeable difficulty in breathing.
+    - seizure-like activity: Repeated involuntary spasms or abnormal movements.
+    - visible bleeding: Blood is clearly seen, indicating an injury.
+    - hazard nearby: A dangerous object or situation is close to the individual.
+    - environmental risk: Unsafe surroundings such as fire, water, or falling objects.
+    - sudden collapse: Unexpected falling, suggesting a serious event.
+    - no assistance: No immediate signs of risk; the individual appears safe.
 
     Reporting Guidelines:
-    - Provide clear, concise, and objective observations
-    - Highlight specific visual evidence
-    - Indicate potential severity of the situation
-    - Recommend immediate actions if necessary
-
-    Confidentiality and Sensitivity:
-    - Maintain utmost respect for individual's privacy
-    - Focus on critical safety assessment
-    - Provide objective, non-invasive analysis
+    - Output strictly in the format: <flag>: <explanation>.
+    - Provide minimal and clear explanations to ensure immediate understanding.
+    - Report only one flag per assessment, focusing on the most critical observation.
     """
+
+
 
     # Initialize the generation config
     generation_config = {
@@ -90,9 +109,9 @@ def analyze_situation(images):
 
     # Prompt for analysis
     prompt = """
-    Carefully analyze these sequential images of a person.
-    Provide a comprehensive assessment focusing on safety and potential emergency scenarios.
-    Describe your observations in detail, highlighting any concerning signs or potential risks.
+    Analyze these sequential images of a person.
+    Provide a brief, concise assessment focusing on safety and potential emergencies.
+    Describe observations clearly and succinctly, highlighting any concerning signs or risks.
     """
 
     try:
@@ -108,7 +127,7 @@ def detect_person(image):
     class_ids = results[0].boxes.cls.cpu().tolist()
     return "person" in [results[0].names[int(cls)] for cls in class_ids]
 
-@app.route('/analyze', methods=['POST'])
+@app.route('/projects/api3/analyze', methods=['POST'])
 def analyze_images():
     global genai_images
     
@@ -153,7 +172,8 @@ def analyze_images():
         except Exception as e:
             print(f"Error in analysis: {e}")
             return jsonify(default_response)
-    
+
+        genai_images = []
     # If not enough images collected, return default response
     return jsonify(default_response)
 
