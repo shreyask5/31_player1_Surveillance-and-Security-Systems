@@ -72,7 +72,6 @@ def analyze_situation(images):
     Flag Definitions:
     - fallen: The individual is on the ground in a manner suggesting a fall.
     - unresponsive: No visible reaction to external stimuli.
-    - critical condition: Signs of life-threatening distress are observed.
     - severe risk: Conditions pose a high probability of harm.
     - potential danger: Nearby factors could harm the individual.
     - motionless: The person has not moved for a concerning duration.
@@ -172,7 +171,6 @@ def analyze_images():
             is_emergency = any(keyword in full_analysis.lower() for keyword in [
                 "fallen", 
                 "unresponsive", 
-                "critical condition", 
                 "severe risk", 
                 "potential danger", 
                 "motionless", 
