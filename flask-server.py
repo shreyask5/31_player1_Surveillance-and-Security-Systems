@@ -61,7 +61,13 @@ def analyze_situation(images):
     Flags and Definitions:
     The system must raise only one flag per assessment. Use the following format:
 
-    <flag>: <explanation>
+    Intensity: <intensity>: <flag>: <explanation>
+
+    - Intensity: A score between 0 and 100 indicating the severity or likelihood of the condition based on the visual input.
+    - Flag: The most critical observation related to the individual's condition.
+    - Explanation: A two-part explanation:
+    1. How: Describes the manner or cause of the incident (e.g., "The individual tripped over an object").  
+    2. Impact: Specifies the body parts affected or hurt (e.g., "Impact detected on the head and left arm").
 
     Flag Definitions:
     - fallen: The individual is on the ground in a manner suggesting a fall.
@@ -82,12 +88,11 @@ def analyze_situation(images):
     - no assistance: No immediate signs of risk; the individual appears safe.
 
     Reporting Guidelines:
-    - Output strictly in the format: <flag>: <explanation>.
+    - Output strictly in the format: Intensity: <intensity>: <flag>: <explanation>.
+    - Ensure explanations include both "how" the incident occurred and "impact" to body parts.
     - Provide minimal and clear explanations to ensure immediate understanding.
     - Report only one flag per assessment, focusing on the most critical observation.
     """
-
-
 
     # Initialize the generation config
     generation_config = {
@@ -163,13 +168,23 @@ def analyze_images():
             genai_images = []
             full_analysis = analyze_situation(images)
             
-            
-            print(f'After {len(genai_images)}\n\n\n\n\n\n\n\n\n')
             # Determine emergency based on Gemini's analysis
             is_emergency = any(keyword in full_analysis.lower() for keyword in [
-                "fallen", "unresponsive", "emergency", "medical attention", 
-                "needs help", "potential danger", "motionless", 
-                "critical condition", "urgent", "severe risk"
+                "fallen", 
+                "unresponsive", 
+                "critical condition", 
+                "severe risk", 
+                "potential danger", 
+                "motionless", 
+                "disoriented", 
+                "restricted movement", 
+                "potential obstruction", 
+                "labored breathing", 
+                "seizure-like activity", 
+                "visible bleeding", 
+                "hazard nearby", 
+                "environmental risk", 
+                "sudden collapse"
             ])
             
             return jsonify({
