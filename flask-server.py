@@ -133,31 +133,38 @@ def analyze_images():
     
     # Default response in case no analysis occurs
     default_response = {
-        "message": "No critical situation detected",
+        "message": "No Person detected",
+        "emergency": False
+    }
+
+    person_seen_response = {
+        "message": "Person detected: Generating Repsonse...",
         "emergency": False
     }
     
-    images = []
     for i in range(3):  # Collect 3 images
         file = request.files.get(f'image{i}')
         if file:
             # Read the image
             image = np.frombuffer(file.read(), np.uint8)
             image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-            images.append(image)
             genai_images.append(image)
     
+    
     # Check if person is detected
-    if not images or not any(detect_person(img) for img in images):
+    if not any(detect_person(img) for img in genai_images):
         genai_images = genai_images[:-3]  # Remove last 3 images
         return jsonify(default_response)
-    
+        
     # Analyze images when we have collected enough
     if len(genai_images) >= 15:
         try:
-            full_analysis = analyze_situation(genai_images[-15:])
-            print(full_analysis)
+            images = genai_images
+            genai_images = []
+            full_analysis = analyze_situation(images)
             
+            
+            print(f'After {len(genai_images)}\n\n\n\n\n\n\n\n\n')
             # Determine emergency based on Gemini's analysis
             is_emergency = any(keyword in full_analysis.lower() for keyword in [
                 "fallen", "unresponsive", "emergency", "medical attention", 
@@ -172,10 +179,10 @@ def analyze_images():
         except Exception as e:
             print(f"Error in analysis: {e}")
             return jsonify(default_response)
+    
 
-        genai_images = []
     # If not enough images collected, return default response
-    return jsonify(default_response)
+    return jsonify(person_seen_response)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5003, debug=True)
