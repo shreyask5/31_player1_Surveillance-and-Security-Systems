@@ -3,34 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YOLO Detection</title>
+  <title>Emergency Detection System</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/sec-style.css" />
+  <link rel="stylesheet" href="https://shreyask.in/css/sec-style.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Real Time Person Detection</h1>
-  </header>
-  
-  <div id="status">
-    <p id="status-text">Status: Initializing...</p>
+  <div id="user-details-modal" class="modal">
+    <div class="modal-content">
+      <h2 class="user-details-heading">User Registration</h2>
+      <form id="user-details-form">
+        <div class="form-group">
+          <label for="name">Full Name*</label>
+          <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Personal Phone Number*</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="emergency-phone">Emergency Contact Phone*</label>
+          <input type="tel" id="emergency-phone" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Home Address*</label>
+          <textarea id="address" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address*</label>
+          <input type="email" id="email" required>
+        </div>
+        <button type="submit">Save Details</button>
+      </form>
+    </div>
   </div>
 
-  <video id="camera" autoplay playsinline></video>
-  <canvas id="canvas" style="display: none;"></canvas>
+  <div id="main-app" class="hidden">
+    <header>
+      <h1>Real Time Person Detection and Emergency Response System</h1>
+    </header>
+    
+    <div id="status">
+      <p id="status-text">Status: Initializing...</p>
+    </div>
 
-  <div id="controls">
-    <button id="startButton">Start</button>
-    <button id="stopButton" disabled>Stop</button>
-  </div>
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="canvas" style="display: none;"></canvas>
 
-  <div id="history"></div>
+    <div id="controls">
+      <button id="startButton">Start</button>
+      <button id="stopButton" disabled>Stop</button>
+    </div>
 
-  <div id="emergency-alert" class="hidden">
-    <p><strong>Emergency Detected!</strong></p>
+    <div id="history"></div>
+
+    <div id="emergency-popup" class="hidden">
+      <div class="emergency-popup-content">
+        <span class="close-popup">&times;</span>
+        <h2>Emergency Detected!</h2>
+        <p id="emergency-message">Default emergency message</p>
+        <div class="emergency-actions">
+          <button id="dismiss-emergency">Dismiss</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
+    // User Details and Application Logic
+    let userDetails = {
+      name: '',
+      phone: '',
+      emergencyPhone: '',
+      address: '',
+      email: '',
+      location: null
+    };
+
+    const userDetailsModal = document.getElementById('user-details-modal');
+    const mainApp = document.getElementById('main-app');
+    const userDetailsForm = document.getElementById('user-details-form');
+
+    // EmailJS Initialization (Replace with your own EmailJS details)
+    (function(){
+      emailjs.init("GSXqaUNnEOH2EeLaE"); // Replace with your User ID
+    })();
+
+    // User Details Form Submission
+    userDetailsForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Capture form data
+      userDetails.name = document.getElementById('name').value;
+      userDetails.phone = document.getElementById('phone').value;
+      userDetails.emergencyPhone = document.getElementById('emergency-phone').value;
+      userDetails.address = document.getElementById('address').value;
+      userDetails.email = document.getElementById('email').value;
+
+      // Request location permission
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Store location coordinates
+          userDetails.location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+
+          // Hide modal and show main app
+          userDetailsModal.classList.add('hidden');
+          mainApp.classList.remove('hidden');
+          
+          // Initialize main app
+          main();
+        },
+        (error) => {
+          alert('Location permission is required. Please enable location services.');
+        }
+      );
+    });
+
+    // Send Emergency Email Function
+    async function sendEmergencyEmail(emergencyMessage) {
+      if (!userDetails.email) {
+        console.error('No email configured');
+        return;
+      }
+
+      const templateParams = {
+        name: userDetails.name,
+        phone: userDetails.phone,
+        emergencyPhone: userDetails.emergencyPhone,
+        address: userDetails.address,
+        email: userDetails.email,
+        latitude: userDetails.location?.latitude || 'Not Available',
+        longitude: userDetails.location?.longitude || 'Not Available',
+        mapsLink: userDetails.location 
+          ? `https://www.google.com/maps?q=${userDetails.location.latitude},${userDetails.location.longitude}` 
+          : 'Location Not Available',
+        emergencyMessage: emergencyMessage
+      };
+
+      try {
+        await emailjs.send(
+          'service_r05t5ye',  // Replace with your Service ID
+          'template_zp8adm4', // Replace with your Template ID
+          templateParams
+        );
+        console.log('Emergency email sent successfully');
+      } catch (error) {
+        console.error('Failed to send emergency email:', error);
+      }
+    }
+
+    // Existing Video and Detection Code (Same as Previous Implementation)
     const video = document.getElementById("camera");
     const canvas = document.getElementById("canvas");
     const statusText = document.getElementById("status-text");
@@ -39,13 +164,13 @@
     const stopButton = document.getElementById("stopButton");
     const context = canvas.getContext("2d");
 
-    const serverUrl = "http://34.47.232.109:5003/analyze"; // Flask server endpoint
+    const serverUrl = "https://shreyask.in/projects/api3/analyze"; // Flask server endpoint
     let detectionInterval;
 
     async function setupCamera() {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480, facingMode: "environment" }, // Back camera on mobile
+          video: { width: 640, height: 480, facingMode: "environment" },
         });
         video.srcObject = stream;
         await new Promise((resolve) => (video.onloadedmetadata = resolve));
@@ -63,22 +188,31 @@
       const entry = document.createElement("p");
       entry.textContent = `[${timestamp}] ${message}`;
       history.appendChild(entry);
-      history.scrollTop = history.scrollHeight; // Scroll to the latest entry
+      history.scrollTop = history.scrollHeight;
+    }
+
+    function stopDetection() {
+      if (detectionInterval) {
+        clearInterval(detectionInterval);
+        detectionInterval = null;
+        statusText.textContent = "Detection stopped.";
+        addStatusToHistory("Detection stopped.");
+        startButton.disabled = false;
+        stopButton.disabled = true;
+      }
     }
 
     async function captureAndSendFrames() {
       const images = [];
       for (let i = 0; i < 3; i++) {
-        // Capture frame
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageBlob = await new Promise((resolve) =>
           canvas.toBlob(resolve, "image/jpeg")
         );
         images.push(imageBlob);
-        await new Promise((resolve) => setTimeout(resolve, 200)); // Small delay between captures
+        await new Promise((resolve) => setTimeout(resolve, 200));
       }
 
-      // Send images to the server
       const formData = new FormData();
       images.forEach((image, index) => formData.append(`image${index}`, image));
 
@@ -93,9 +227,30 @@
         addStatusToHistory(result.message);
 
         if (result.emergency) {
-          document.getElementById("emergency-alert").classList.remove("hidden");
-        } else {
-          document.getElementById("emergency-alert").classList.add("hidden");
+          stopDetection();
+
+          // Send emergency email
+          await sendEmergencyEmail(result.message);
+
+          const emergencyPopup = document.getElementById("emergency-popup");
+          const emergencyMessage = document.getElementById("emergency-message");
+          const dismissButton = document.getElementById("dismiss-emergency");
+          const closePopup = document.querySelector(".close-popup");
+
+          emergencyMessage.textContent = result.message;
+          emergencyPopup.classList.remove("hidden");
+
+          function hidePopup() {
+            emergencyPopup.classList.add("hidden");
+          }
+
+          dismissButton.addEventListener("click", hidePopup);
+          closePopup.addEventListener("click", hidePopup);
+
+          const callHelpButton = document.getElementById("call-help");
+          callHelpButton.addEventListener("click", function() {
+            alert("Calling emergency services...");
+          });
         }
       } catch (err) {
         console.error("Error sending data to server: ", err);
@@ -115,28 +270,14 @@
       }
     }
 
-    function stopDetection() {
-      if (detectionInterval) {
-        clearInterval(detectionInterval);
-        detectionInterval = null;
-        statusText.textContent = "Detection stopped.";
-        addStatusToHistory("Detection stopped.");
-        startButton.disabled = false;
-        stopButton.disabled = true;
-      }
-    }
-
     async function main() {
       await setupCamera();
       statusText.textContent = "Camera ready. Click 'Start' to begin detection.";
       addStatusToHistory("Camera ready. Click 'Start' to begin detection.");
     }
 
-    // Event listeners for buttons
     startButton.addEventListener("click", startDetection);
     stopButton.addEventListener("click", stopDetection);
-
-    main();
   </script>
 </body>
 </html>
