@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOLO Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sec-style.css" />
+</head>
+<body>
+  <header>
+    <h1>Real Time Person Detection</h1>
+  </header>
+  
+  <div id="status">
+    <p id="status-text">Status: Initializing...</p>
+  </div>
+
+  <video id="camera" autoplay playsinline></video>
+  <canvas id="canvas" style="display: none;"></canvas>
+
+  <div id="controls">
+    <button id="startButton">Start</button>
+    <button id="stopButton" disabled>Stop</button>
+  </div>
+
+  <div id="history"></div>
+
+  <div id="emergency-alert" class="hidden">
+    <p><strong>Emergency Detected!</strong></p>
+  </div>
+
+  <script>
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("canvas");
+    const statusText = document.getElementById("status-text");
+    const history = document.getElementById("history");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const context = canvas.getContext("2d");
+
+    const serverUrl = "https://shreyask.in/projects/api3/analyze"; // Flask server endpoint
+    let detectionInterval;
+
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480, facingMode: "environment" }, // Back camera on mobile
+        });
+        video.srcObject = stream;
+        await new Promise((resolve) => (video.onloadedmetadata = resolve));
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      } catch (err) {
+        console.error("Error accessing camera: ", err);
+        statusText.textContent = "Error accessing camera.";
+        addStatusToHistory("Error accessing camera.");
+      }
+    }
+
+    function addStatusToHistory(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement("p");
+      entry.textContent = `[${timestamp}] ${message}`;
+      history.appendChild(entry);
+      history.scrollTop = history.scrollHeight; // Scroll to the latest entry
+    }
+
+    async function captureAndSendFrames() {
+      const images = [];
+      for (let i = 0; i < 3; i++) {
+        // Capture frame
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageBlob = await new Promise((resolve) =>
+          canvas.toBlob(resolve, "image/jpeg")
+        );
+        images.push(imageBlob);
+        await new Promise((resolve) => setTimeout(resolve, 200)); // Small delay between captures
+      }
+
+      // Send images to the server
+      const formData = new FormData();
+      images.forEach((image, index) => formData.append(`image${index}`, image));
+
+      try {
+        const response = await fetch(serverUrl, {
+          method: "POST",
+          body: formData,
+        });
+        const result = await response.json();
+        const statusMessage = `Status: ${result.message}`;
+        statusText.textContent = statusMessage;
+        addStatusToHistory(result.message);
+
+        if (result.emergency) {
+          document.getElementById("emergency-alert").classList.remove("hidden");
+        } else {
+          document.getElementById("emergency-alert").classList.add("hidden");
+        }
+      } catch (err) {
+        console.error("Error sending data to server: ", err);
+        const errorMessage = "Error communicating with server.";
+        statusText.textContent = errorMessage;
+        addStatusToHistory(errorMessage);
+      }
+    }
+
+    function startDetection() {
+      if (!detectionInterval) {
+        detectionInterval = setInterval(captureAndSendFrames, 1000);
+        statusText.textContent = "Detection started.";
+        addStatusToHistory("Detection started.");
+        startButton.disabled = true;
+        stopButton.disabled = false;
+      }
+    }
+
+    function stopDetection() {
+      if (detectionInterval) {
+        clearInterval(detectionInterval);
+        detectionInterval = null;
+        statusText.textContent = "Detection stopped.";
+        addStatusToHistory("Detection stopped.");
+        startButton.disabled = false;
+        stopButton.disabled = true;
+      }
+    }
+
+    async function main() {
+      await setupCamera();
+      statusText.textContent = "Camera ready. Click 'Start' to begin detection.";
+      addStatusToHistory("Camera ready. Click 'Start' to begin detection.");
+    }
+
+    // Event listeners for buttons
+    startButton.addEventListener("click", startDetection);
+    stopButton.addEventListener("click", stopDetection);
+
+    main();
+  </script>
+</body>
+</html>
