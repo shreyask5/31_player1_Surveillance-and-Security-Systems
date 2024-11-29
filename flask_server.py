@@ -161,7 +161,7 @@ def analyze_images():
         return jsonify(default_response)
         
     # Analyze images when we have collected enough
-    if len(genai_images) >= 15:
+    if len(genai_images) == 15:
         try:
             images = genai_images
             genai_images = []
