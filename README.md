@@ -1,6 +1,7 @@
 # Emergency Detection System: Surveillance and Security Application
 
 ## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-response-system/demo](https://shreyask.in/projects/emergency-detection/demo)
+## **Watch Emergency Response System Demo**: [Watch Demo Here](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
 
 This project was developed during the 24-hour Gradient AI Hackathon, where it secured **second place 🥈** for its innovative approach to safety monitoring.  
 
@@ -25,10 +26,6 @@ The Emergency Detection System aims to enhance personal safety through intellige
 ## Project Overview
 
 The system continuously monitors a user's environment, analyzing video frames to identify potential safety risks, medical emergencies, or unusual situations. When a critical scenario is detected, it automatically sends detailed emergency notifications to designated contacts.
-
-## **Watch Emergency Response System Demo**: [Watch Demo Here](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
-
-
 
 ## Features and Functionalities
 
