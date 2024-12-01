@@ -1,11 +1,12 @@
 # Emergency Detection System: Surveillance and Security Application
 
-## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-detection](https://shreyask.in/projects/emergency-detection)  
-## **Watch the Demo Video**: [Emergency Detection System Demo](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
+## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-detection](https://shreyask.in/projects/emergency-detection)
+
+This project was developed during the 24-hour Gradient AI Hackathon, where it secured **second place 🥈** for its innovative approach to safety monitoring.  
 
 This project is an advanced web application designed to provide real-time safety monitoring and emergency detection using computer vision and artificial intelligence technologies. The system utilizes machine learning models and AI analysis to identify potential emergency situations, offering immediate response mechanisms for personal safety.
 
-The core functionality involves continuous video monitoring, detecting potential physical risks or medical emergencies through advanced image analysis. By leveraging YOLOv11 for person detection and Google Gemini AI for sophisticated scenario interpretation, the application provides a comprehensive safety monitoring solution.
+The core functionality involves continuous video monitoring, detecting potential physical risks or medical emergencies through advanced image analysis. By leveraging YOLOv8 for object detection and Google Gemini AI for sophisticated scenario interpretation, the application provides a comprehensive safety monitoring solution.
 
 ## Table of Contents
 
@@ -24,6 +25,15 @@ The Emergency Detection System aims to enhance personal safety through intellige
 ## Project Overview
 
 The system continuously monitors a user's environment, analyzing video frames to identify potential safety risks, medical emergencies, or unusual situations. When a critical scenario is detected, it automatically sends detailed emergency notifications to designated contacts.
+
+## Demo Video
+
+<div align="center">
+  <video controls width="480" height="auto">
+    <source src="https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ## Features and Functionalities
 
