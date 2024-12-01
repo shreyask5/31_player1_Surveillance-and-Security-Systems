@@ -1,6 +1,6 @@
-![image](https://github.com/user-attachments/assets/a9a653fe-59a6-48f5-81d2-5f0b20eca8ec)# Emergency Detection System: Surveillance and Security Application
+# Emergency Detection System: Surveillance and Security Application
 
-## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-detection](https://shreyask.in/projects/emergency-detection)
+## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-response-system/demo](https://shreyask.in/projects/emergency-detection/demo)
 
 This project was developed during the 24-hour Gradient AI Hackathon, where it secured **second place 🥈** for its innovative approach to safety monitoring.  
 
@@ -28,7 +28,8 @@ The system continuously monitors a user's environment, analyzing video frames to
 
 ## Demo Video
 
-https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4
+## **Watch Emergency Response System Demo**: [Watch Demo Here](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
+
 
 ## Features and Functionalities
 
@@ -117,4 +118,3 @@ The Emergency Detection System represents an innovative approach to personal saf
 - **[Google Gemini AI Documentation](https://ai.google.dev/tutorials)**
 - **[Flask Documentation](https://flask.palletsprojects.com/)**
 - **[WebRTC MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API)**
-- **[Computer Vision Research Papers](https://arxiv.org/list/cs.CV/recent)**
