@@ -26,9 +26,8 @@ The Emergency Detection System aims to enhance personal safety through intellige
 
 The system continuously monitors a user's environment, analyzing video frames to identify potential safety risks, medical emergencies, or unusual situations. When a critical scenario is detected, it automatically sends detailed emergency notifications to designated contacts.
 
-## Demo Video
-
 ## **Watch Emergency Response System Demo**: [Watch Demo Here](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
+
 
 
 ## Features and Functionalities
