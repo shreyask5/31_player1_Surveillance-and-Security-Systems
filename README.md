@@ -60,7 +60,7 @@ The system continuously monitors a user's environment, analyzing video frames to
   - RESTful API
   - FormData for image transmission
 - **Deployment**:
-  - Hosted on cloud infrastructure
+  - Hosted on shreyask.in website hosted on AWS EC2 and Emergency Response System flask server hosted on Google Cloud N2
 - **Version Control**: Git
 
 ## Changelog
