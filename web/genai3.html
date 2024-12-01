@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Detection System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    /* General Reset */
+    body {
+        margin: 0;
+        font-family: 'Inter', 'Courier New', Courier, monospace;
+        background-color: #000; /* Black background for hacker theme */
+        color: #00ff00; /* Neon green text */
+    }
+    
+    /* Modal for User Registration */
+    #user-details-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #111; /* Dark background */
+        border: 2px solid #00ff00; /* Neon green border */
+        box-shadow: 0 0 15px #00ff00;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+        z-index: 2000;
+    }
+    
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .user-details-heading {
+        font-size: 1.8em;
+        color: #00ff00;
+        margin-bottom: 20px;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px #00ff00;
+    }
+    
+    /* Form Styling */
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    label {
+        font-size: 1.2em;
+        color: #00ff00;
+        margin-bottom: 5px;
+        text-shadow: 0 0 5px #00ff00;
+    }
+    
+    input,
+    textarea,
+    button {
+        font-size: 1em;
+        padding: 10px;
+        background: #000;
+        color: #00ff00;
+        border: 2px solid #00ff00;
+        border-radius: 4px;
+        outline: none;
+        transition: 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    input:focus,
+    textarea:focus {
+        border-color: #00cc00;
+        box-shadow: 0 0 10px #00ff00;
+    }
+    
+    button {
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: 0.3s ease;
+    }
+    
+    button:hover {
+        background: #00ff00;
+        color: #000;
+        box-shadow: 0 0 15px #00ff00;
+    }
+    
+    /* Main App */
+    #main-app {
+        padding: 20px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        color: #00ff00;
+        text-shadow: 0 0 10px #00ff00;
+    }
+    
+    #status {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    #status-text {
+        font-size: 1.2em;
+        color: #00ff00;
+    }
+    
+    /* Camera */
+    #camera {
+        display: block;
+        margin: 20px auto;
+        max-width: 90%;
+        border: 2px solid #00ff00;
+        box-shadow: 0 0 10px #00ff00;
+    }
+    
+    /* Controls */
+    #controls {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    #controls button {
+        margin: 0 10px;
+        background: #000;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: 0.3s ease;
+        width: auto;
+    }
+    
+    #controls button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    #controls button:hover:not(:disabled) {
+        background: #00ff00;
+        color: #000;
+        box-shadow: 0 0 10px #00ff00;
+    }
+    
+    /* History */
+    #history {
+        background: #111;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        padding: 10px;
+        max-height: 300px;
+        overflow-y: auto;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 600px;
+    }
+    
+    /* Emergency Popup */
+    #emergency-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #111;
+        border: 2px solid #ff0000; /* Red for emergency */
+        box-shadow: 0 0 15px #ff0000;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 400px;
+        z-index: 1000;
+    }
+    
+    .emergency-popup-content h2 {
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000;
+    }
+    
+    .emergency-popup-content p {
+        color: #fff;
+        margin-bottom: 20px;
+    }
+    
+    .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.5em;
+        cursor: pointer;
+        color: #fff;
+        transition: 0.3s ease;
+    }
+    
+    .close-popup:hover {
+        color: #ff0000;
+    }
+    
+    .hidden {
+        display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="user-details-modal" class="modal">
+    <div class="modal-content">
+      <h2 class="user-details-heading">User Registration</h2>
+      <form id="user-details-form">
+        <div class="form-group">
+          <label for="name">Full Name*</label>
+          <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Personal Phone Number*</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+          <label for="emergency-phone">Emergency Contact Phone*</label>
+          <input type="tel" id="emergency-phone" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Home Address*</label>
+          <textarea id="address" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="email">Emergency Response Email*</label>
+          <input type="email" id="email" required>
+        </div>
+        <button type="submit">Save Details</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="main-app" class="hidden">
+    <header>
+      <h1>Real Time Person Detection and Emergency Response System</h1>
+    </header>
+    
+    <div id="status">
+      <p id="status-text">Status: Initializing...</p>
+    </div>
+
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <div id="controls">
+      <button id="startButton">Start</button>
+      <button id="stopButton" disabled>Stop</button>
+    </div>
+
+    <div id="history"></div>
+
+    <div id="emergency-popup" class="hidden">
+      <div class="emergency-popup-content">
+        <span class="close-popup">&times;</span>
+        <h2>Emergency Detected!</h2>
+        <p id="emergency-message">Default emergency message</p>
+        <div class="emergency-actions">
+          <button id="dismiss-emergency">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+// User Details and Application Logic
+let userDetails = {
+      name: '',
+      phone: '',
+      emergencyPhone: '',
+      address: '',
+      emergencyResponseEmail: '',
+      location: null
+    };
+
+    const userDetailsModal = document.getElementById('user-details-modal');
+    const mainApp = document.getElementById('main-app');
+    const userDetailsForm = document.getElementById('user-details-form');
+
+    // User Details Form Submission
+    userDetailsForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Capture form data
+      userDetails.name = document.getElementById('name').value;
+      userDetails.phone = document.getElementById('phone').value;
+      userDetails.emergencyPhone = document.getElementById('emergency-phone').value;
+      userDetails.address = document.getElementById('address').value;
+      userDetails.emergencyResponseEmail = document.getElementById('email').value;
+
+      // Request location permission
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Store location coordinates
+          userDetails.location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+
+          // Hide modal and show main app
+          userDetailsModal.classList.add('hidden');
+          mainApp.classList.remove('hidden');
+          
+          // Initialize main app
+          main();
+        },
+        (error) => {
+          alert('Location permission is required. Please enable location services.');
+        }
+      );
+    });
+
+    // Modified to send user details with image detection
+    async function captureAndSendFrames() {
+      const images = [];
+      for (let i = 0; i < 3; i++) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageBlob = await new Promise((resolve) =>
+          canvas.toBlob(resolve, "image/jpeg")
+        );
+        images.push(imageBlob);
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+
+      const formData = new FormData();
+      images.forEach((image, index) => formData.append(`image${index}`, image));
+
+      // Add user details to FormData
+      formData.append('email_config', JSON.stringify({
+        name: userDetails.name,
+        phone: userDetails.phone,
+        emergency_phone: userDetails.emergencyPhone,
+        address: userDetails.address,
+        emergencyResponseEmail: userDetails.emergencyResponseEmail,
+        latitude: userDetails.location?.latitude || null,
+        longitude: userDetails.location?.longitude || null,
+        maps_link: userDetails.location 
+          ? `https://www.google.com/maps?q=${userDetails.location.latitude},${userDetails.location.longitude}` 
+          : null
+      }));
+
+      try {
+        const startTime = performance.now();
+        const response = await fetch(serverUrl, {
+          method: "POST",
+          body: formData,
+        });
+        const endTime = performance.now();
+        console.log(`Time taken to send and receive from server: ${endTime - startTime} milliseconds`);
+
+        const result = await response.json();
+        const statusMessage = `Status: ${result.message}`;
+        statusText.textContent = statusMessage;
+        addStatusToHistory(result.message);
+
+        if (result.emergency) {
+          run = false;
+
+          const emergencyPopup = document.getElementById("emergency-popup");
+          const emergencyMessage = document.getElementById("emergency-message");
+          const dismissButton = document.getElementById("dismiss-emergency");
+          const closePopup = document.querySelector(".close-popup");
+          
+          emergencyMessage.innerHTML = result.message + "<br> Emergency Email Sent to " + userDetails.emergencyResponseEmail;
+          emergencyPopup.classList.remove("hidden");
+
+          function hidePopup() {
+            emergencyPopup.classList.add("hidden");
+          }
+
+          dismissButton.addEventListener("click", hidePopup);
+          closePopup.addEventListener("click", hidePopup);
+
+          startButton.disabled = false;
+          stopButton.disabled = true;
+        }
+      } catch (err) {
+        console.error("Error sending data to server: ", err);
+        const errorMessage = "Error communicating with server.";
+        statusText.textContent = errorMessage;
+        addStatusToHistory(errorMessage);
+      }
+    }
+
+    // Remove the previous sendEmergencyEmail function as it's no longer needed
+
+    // Rest of the existing code remains the same
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("canvas");
+    const statusText = document.getElementById("status-text");
+    const history = document.getElementById("history");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const context = canvas.getContext("2d");
+
+    const serverUrl = "https://shreyask.in/projects/api3/analyze"; // Flask server endpoint
+    let run = false;
+
+    async function continuousDetection() {
+      while (run) {
+        await captureAndSendFrames();
+      }
+    }
+
+    function startDetection() {
+      if (!run) {
+        run = true;
+        statusText.textContent = "Detection started.";
+        addStatusToHistory("Detection started.");
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        continuousDetection();
+      }
+    }
+
+    function stopDetection() {
+      run = false;
+      statusText.textContent = "Detection stopped.";
+      addStatusToHistory("Detection stopped.");
+      startButton.disabled = false;
+      stopButton.disabled = true;
+    }
+
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480, facingMode: "environment" },
+        });
+        video.srcObject = stream;
+        await new Promise((resolve) => (video.onloadedmetadata = resolve));
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      } catch (err) {
+        console.error("Error accessing camera: ", err);
+        statusText.textContent = "Error accessing camera.";
+        addStatusToHistory("Error accessing camera.");
+      }
+    }
+
+    function addStatusToHistory(message) {
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement("p");
+      entry.textContent = `[${timestamp}] ${message}`;
+      history.appendChild(entry);
+      history.scrollTop = history.scrollHeight;
+    }
+
+    function main() {
+      setupCamera().then(() => {
+        startButton.addEventListener('click', startDetection);
+        stopButton.addEventListener('click', stopDetection);
+
+        statusText.textContent = "Camera initialized. Press Start to begin detection.";
+        addStatusToHistory("Camera initialized.");
+      });
+    }
+  </script>
+</body>
+</html>
