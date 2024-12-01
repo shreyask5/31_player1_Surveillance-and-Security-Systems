@@ -3,7 +3,7 @@
 ## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-response-system/demo](https://shreyask.in/projects/emergency-detection/demo)
 ## **Watch Emergency Response System Demo**: [Watch Demo Here](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
 
-This project was developed during the **24-hour Gradient AI Hackathon**, where it secured **second place 🥈** out of **60 teams** for its innovative approach to safety monitoring.  
+This project was developed during the **24-hour Gradient AI Hackathon** conducted at B. M. S. College of Engineering, where it secured **second place 🥈** out of **60 teams** for its innovative approach to safety monitoring.  
 
 This project is an advanced web application designed to provide real-time safety monitoring and emergency detection using computer vision and artificial intelligence technologies. The system utilizes machine learning models and AI analysis to identify potential emergency situations, offering immediate response mechanisms for personal safety.
 
