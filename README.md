@@ -1,10 +1,11 @@
 # Emergency Detection System: Surveillance and Security Application
 
-## **Try Emergency Detection System Live**: (https://shreyask.in/projects/emergency-detection)
+## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-detection](https://shreyask.in/projects/emergency-detection)  
+## **Watch the Demo Video**: [Emergency Detection System Demo](https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4)
 
 This project is an advanced web application designed to provide real-time safety monitoring and emergency detection using computer vision and artificial intelligence technologies. The system utilizes machine learning models and AI analysis to identify potential emergency situations, offering immediate response mechanisms for personal safety.
 
-The core functionality involves continuous video monitoring, detecting potential physical risks or medical emergencies through advanced image analysis. By leveraging YOLOv8 for object detection and Google Gemini AI for sophisticated scenario interpretation, the application provides a comprehensive safety monitoring solution.
+The core functionality involves continuous video monitoring, detecting potential physical risks or medical emergencies through advanced image analysis. By leveraging YOLOv11 for person detection and Google Gemini AI for sophisticated scenario interpretation, the application provides a comprehensive safety monitoring solution.
 
 ## Table of Contents
 
@@ -69,17 +70,16 @@ The system continuously monitors a user's environment, analyzing video frames to
   - Removed client-side email sending dependency
 
 - **User Notification Enhancements**  
-  - Extended emergency popup message to include detailed analysis
-  - Added confirmation of emergency email destination
+  - Emergency popup now includes detailed analysis and email confirmation
+  - Improved transparency in emergency communication
 
 - **Data Transmission**  
-  - Modified `FormData` to include comprehensive user configuration
-  - Simplified client-side email configuration logic
+  - `FormData` updated to include comprehensive user configuration
+  - Centralized email handling on the server for enhanced security
 
 - **Security and Privacy**  
-  - Centralized email sending process on the server
   - Reduced sensitive user information exposure
-  - Enhanced server-side email dispatch mechanism
+  - Improved server-side email dispatch mechanism
 
 ### **Version 2.1**  
 - **Detection Mechanism**  
@@ -96,11 +96,11 @@ The system continuously monitors a user's environment, analyzing video frames to
   - Stops detection when stop button is pressed or emergency is detected
 
 ### **Version 1.0**  
-- **Initial Implementation**
-  - User registration with detail validation
-  - Device camera frame capture
-  - Backend image analysis
-  - Emergency notification via EmailJS
+- **Initial Implementation**  
+  - User registration with detail validation  
+  - Device camera frame capture  
+  - Backend image analysis  
+  - Emergency notification via EmailJS  
 
 ## Conclusion
 
