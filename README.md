@@ -1,4 +1,4 @@
-# Emergency Detection System: Surveillance and Security Application
+![image](https://github.com/user-attachments/assets/a9a653fe-59a6-48f5-81d2-5f0b20eca8ec)# Emergency Detection System: Surveillance and Security Application
 
 ## **Try Emergency Detection System Live**: [https://shreyask.in/projects/emergency-detection](https://shreyask.in/projects/emergency-detection)
 
@@ -28,12 +28,7 @@ The system continuously monitors a user's environment, analyzing video frames to
 
 ## Demo Video
 
-<div align="center">
-  <video controls width="480" height="auto">
-    <source src="https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
+https://my-portfolio-website-s3-bucket.s3.ap-south-1.amazonaws.com/assets/Emergency_Response_System_Demo.mp4
 
 ## Features and Functionalities
 
